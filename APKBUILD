@@ -9,7 +9,7 @@ arch="all"
 license="X11"
 depends="git openssl"
 depends_dev="openssl-dev"
-makedepends="$depends_dev libxslt make"
+makedepends="$depends_dev docbook-xsl libxslt make"
 install=""
 subpackages="$pkgname-dev $pkgname-doc"
 source="https://www.agwa.name/projects/$pkgname/downloads/$pkgname-$pkgver.tar.gz"
@@ -17,12 +17,12 @@ builddir="$srcdir/$pkgname-$pkgver"
 
 build() {
 	cd "$builddir"
-	make ENABLE_MAN=yes || return 1
+	make ENABLE_MAN=yes DOCBOOK_XSL=/usr/share/xml/docbook/xsl-stylesheets-1.79.1/manpages/docbook.xsl || return 1
 }
 
 package() {
 	cd "$builddir"
-	make ENABLE_MAN=yes PREFIX="$pkgdir" install || return 1
+	make PREFIX="$pkgdir" install || return 1
 }
 
 dev() {
