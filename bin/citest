@@ -1,0 +1,14 @@
+#!/bin/sh
+set -ex
+
+__now="$(date -u +%s)"
+__wdir="/tmp/${__now}/"
+
+docker run -it -v "$1":/packages alpine:3.5 sh -c "\
+  cp /packages/sgerrand.rsa.pub /etc/apk/keys/ \
+  && apk add --no-progress --update-cache --upgrade /packages/builder/x86_64/*.apk \
+  && mkdir -p ${__wdir} \
+  && touch ${__wdir}/test \
+  && cd ${__wdir} \
+  && git init \
+  && git-crypt status"
