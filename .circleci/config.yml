@@ -1,0 +1,49 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: docker:git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Create Docker volumes
+          command: |
+            docker create --name input --volume /home/builder/package alpine:3.7 /bin/true
+            docker create --name output --volume /packages alpine:3.7 /bin/true
+            docker cp ./APKBUILD input:/home/builder/package/
+      - run:
+          name: Build packages
+          command: |
+            docker run --env RSA_PRIVATE_KEY="$RSA_PRIVATE_KEY" --env RSA_PRIVATE_KEY_NAME="sgerrand.rsa" \
+                       --volumes-from input --volumes-from output sgerrand/alpine-abuild:3.7
+      - run:
+          name: Extract packages
+          command: |
+            mkdir -p packages
+            docker cp output:/packages/builder packages/
+      - run:
+          name: Test installing packages
+          command: |
+            cp sgerrand.rsa.pub /etc/apk/keys/sgerrand.rsa.pub
+            apk add --no-progress --no-cache ./packages/builder/x86_64/git-crypt-*.apk
+      - run:
+          name: Test executable
+          command: |
+            __now="$(date -u +%s)"
+            __wdir="tmp/${__now}/"
+            mkdir -p $__wdir
+            touch $__wdir/test
+            cd $__wdir
+            git init
+            git-crypt status
+      - run:
+          name: Remove Docker volumes
+          command: |
+            docker rm input
+            docker rm output
+          when: always
+      - store_artifacts:
+          destination: pkgs
+          path: packages
+    working_directory: ~/alpine-pkg-git-crypt
