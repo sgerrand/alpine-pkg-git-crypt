@@ -40,6 +40,9 @@ jobs:
     docker:
       - image: alpine:3.9
     steps:
+      - run:
+          name: Install CA certificates
+          command: apk add --no-cache ca-certificates
       - attach_workspace:
           at: .
       - run:
