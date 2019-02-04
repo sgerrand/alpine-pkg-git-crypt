@@ -94,7 +94,10 @@ workflows:
   version: 2
   build-test-release:
     jobs:
-      - build
+      - build:
+          filters:
+            tags:
+              only: /.*/
       - release-master:
           requires:
             - build
@@ -118,4 +121,4 @@ workflows:
             - build
           filters:
             tags:
-              only: /[0-9]+(\.[0-9]+){1,2}(\-r\d+)?$/
+              only: /.*/
