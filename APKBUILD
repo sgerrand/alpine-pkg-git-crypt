@@ -2,7 +2,7 @@
 # Maintainer: Sasha Gerrand <alpine-pkgs@sgerrand.com>
 pkgname=git-crypt
 pkgver=0.6.0
-pkgrel=0
+pkgrel=1
 pkgdesc="Transparent file encryption in git"
 url="https://www.agwa.name/projects/git-crypt/"
 arch="all"
