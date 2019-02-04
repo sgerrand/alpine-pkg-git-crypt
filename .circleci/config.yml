@@ -23,6 +23,27 @@ jobs:
             mkdir -p packages
             docker cp output:/packages/builder packages/
       - run:
+          name: Remove Docker volumes
+          command: |
+            docker rm input
+            docker rm output
+          when: always
+      - store_artifacts:
+          destination: pkgs
+          path: packages
+      - persist_to_workspace:
+          root: .
+          paths:
+            - sgerrand.rsa.pub
+            - packages
+    working_directory: ~/alpine-pkg-git-crypt
+  test:
+    docker:
+      - image: alpine:3.9
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
           name: Test installing packages
           command: |
             cp sgerrand.rsa.pub /etc/apk/keys/sgerrand.rsa.pub
@@ -37,19 +58,6 @@ jobs:
             cd $__wdir
             git init
             git-crypt status
-      - run:
-          name: Remove Docker volumes
-          command: |
-            docker rm input
-            docker rm output
-          when: always
-      - store_artifacts:
-          destination: pkgs
-          path: packages
-      - persist_to_workspace:
-          root: .
-          paths:
-            - packages
     working_directory: ~/alpine-pkg-git-crypt
   release-master:
     docker:
@@ -87,6 +95,7 @@ workflows:
       - release-master:
           requires:
             - build
+            - test
           filters:
             branches:
               only: master
@@ -95,8 +104,10 @@ workflows:
       - release-tag:
           requires:
             - build
+            - test
           filters:
             tags:
               only: /[0-9]+(\.[0-9]+){1,2}(\-r\d+)?$/
             branches:
               ignore: /.*/
+      - test
