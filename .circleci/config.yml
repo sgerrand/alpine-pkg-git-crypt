@@ -34,7 +34,6 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - sgerrand.rsa.pub
             - packages
     working_directory: ~/alpine-pkg-git-crypt
   test:
@@ -44,10 +43,11 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Add package signing key
+          command: wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://raw.githubusercontent.com/sgerrand/alpine-pkg-git-crypt/master/sgerrand.rsa.pub
+      - run:
           name: Test installing packages
-          command: |
-            cp sgerrand.rsa.pub /etc/apk/keys/sgerrand.rsa.pub
-            apk add --no-progress --no-cache ./packages/builder/x86_64/git-crypt-*.apk
+          command: apk add --no-progress --no-cache ./packages/builder/x86_64/git-crypt-*.apk
       - run:
           name: Test executable
           command: |
