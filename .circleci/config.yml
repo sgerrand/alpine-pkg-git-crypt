@@ -34,7 +34,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - packages
+            - packages/builder/x86_64
     working_directory: ~/alpine-pkg-git-crypt
   test:
     docker:
