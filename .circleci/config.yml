@@ -110,4 +110,9 @@ workflows:
               only: /[0-9]+(\.[0-9]+){1,2}(\-r\d+)?$/
             branches:
               ignore: /.*/
-      - test
+      - test:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /[0-9]+(\.[0-9]+){1,2}(\-r\d+)?$/
