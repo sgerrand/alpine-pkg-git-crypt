@@ -1,8 +1,8 @@
 # alpine-pkg-git-crypt
 
-[![CircleCI](https://img.shields.io/circleci/project/sgerrand/alpine-pkg-git-crypt/master.svg)](https://circleci.com/gh/sgerrand/alpine-pkg-git-crypt)
+:warning: Deprecate :warning:
 
-This is [`git-crypt`][git-crypt] packaged for [Alpine Linux][alpine-linux].
+This was [`git-crypt`][git-crypt] packaged for [Alpine Linux][alpine-linux]. It is now [available in Alpine Linux's aports repository][alpine-linux-package-search], so please install it from there using `apk add git-crypt`.
 
 ## Releases
 
@@ -20,4 +20,4 @@ The current installation method for these packages is to pull them in using
 
 [alpine-linux]: https://www.alpinelinux.org
 [git-crypt]: https://www.agwa.name/projects/git-crypt/
-[releases]: https://github.com/sgerrand/alpine-pkg-git-crypt/releases/
+[alpine-linux-package-search]: https://pkgs.alpinelinux.org/packages?name=git-crypt
